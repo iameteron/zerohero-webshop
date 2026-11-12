@@ -1,118 +1,43 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#f6f7f4" />
-    <title>ZeroHero · WebShop</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <div class="wrap bar">
-        <a class="brand" href="./" aria-label="ZeroHero home"
-          ><span class="mark" aria-hidden="true">Z</span>ZeroHero</a
-        ><span class="slash">/</span><span>WebShop</span
-        ><a class="source" href="https://github.com/iameteron/zerohero-webshop"
-          >Source ↗</a
-        >
-      </div>
-    </header>
-    <main class="wrap">
-      <section class="intro">
-        <div>
-          <h1>ZeroHero in WebShop</h1>
-          <p class="sub">
-            Watch a 10M-parameter agent search, choose options and shop in your
-            browser.
-          </p>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fafaf9">
+  <title>ZeroHero 10M in WebShop</title>
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+<main>
+  <header>
+    <h1>ZeroHero 10M in WebShop</h1>
+    <label class="task">Task <select id="goal" aria-label="Evaluation task" disabled></select></label>
+  </header>
+  <section class="environment" aria-label="WebShop simulator">
+    <iframe id="store" sandbox="allow-same-origin" title="Interactive WebShop store"></iframe>
+    <nav aria-label="Agent controls">
+      <button id="run" title="Run agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2v12l10-6z"/></svg>Run</button>
+      <button id="step" aria-label="Step" title="One agent step" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2v12l9-6zM12 2h2v12h-2z"/></svg></button>
+      <button id="stop" aria-label="Stop" title="Stop agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="1"/></svg></button>
+      <button id="reset" aria-label="Reset task" title="Restart this task" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path class="stroke" d="M14 3v4h-4m4 0a6 6 0 1 0-1 5"/></svg></button>
+      <span class="readout"><span id="steps">Step 0 / 50</span><span id="score" hidden></span></span>
+      <details id="settings">
+        <summary aria-label="Settings" title="Settings"><svg viewBox="0 0 16 16" aria-hidden="true"><g class="stroke"><path d="M1 5h7m4 0h3M1 11h3m4 0h7"/><circle cx="10" cy="5" r="2"/><circle cx="6" cy="11" r="2"/></g></svg></summary>
+        <div class="drawer">
+          <p><strong>ZeroHero 10M</strong><br>TCOD SFT, epoch 4 · GiGPO-7B teacher</p>
+          <label>Decoding <select id="policy"><option value="sample">Temperature 1</option><option value="greedy">Greedy</option></select></label>
+          <label class="toggle"><input type="checkbox" id="history"> Show previous steps</label>
+          <p class="links"><a href="model/model.safetensors" download>Weights</a> · <a href="https://github.com/iameteron/zerohero-webshop#checkpoint">Evaluation</a> · <a href="https://github.com/iameteron/zerohero-webshop">GitHub</a></p>
         </div>
-        <div class="model">
-          <span class="kicker">CHECKPOINT</span
-          ><strong>ZeroHero 10M <small>/</small> Epoch 4</strong
-          ><span>TCOD SFT · GiGPO-7B teacher</span>
-        </div>
-      </section>
-      <section class="controls" aria-label="Episode controls">
-        <label class="task"
-          >Task
-          <select id="goal" aria-label="Evaluation task"></select
-        ></label>
-        <button id="reset" title="Restart this task">Reset</button>
-        <div class="divider"></div>
-        <label class="policy"
-          >Decoding
-          <select id="policy">
-            <option value="sample">Sample · T=1</option>
-            <option value="greedy">Greedy</option>
-          </select></label
-        >
-        <div class="buttons">
-          <button id="stop" disabled>Stop</button
-          ><button id="step" disabled>Step</button
-          ><button class="run" id="run" disabled>
-            <span aria-hidden="true">▶</span> Run agent
-          </button>
-        </div>
-      </section>
-      <div class="grid">
-        <section class="panel shop">
-          <div class="panelbar">
-            <h2>Storefront</h2>
-            <span class="tag">small_synthetic</span>
-          </div>
-          <iframe
-            id="store"
-            sandbox="allow-same-origin"
-            title="Interactive WebShop store"
-          ></iframe>
-          <div class="foot">
-            <span id="scene">Loading catalog…</span
-            ><span id="score">Reward —</span>
-          </div>
-        </section>
-        <section class="panel trace">
-          <div class="panelbar">
-            <h2>Agent trace</h2>
-            <span id="steps" class="tag">Step 0 / 50</span>
-          </div>
-          <div class="activity">
-            <span id="lamp"></span
-            ><span id="status" role="status">Loading model…</span
-            ><button hidden id="retry">Retry</button>
-          </div>
-          <div class="log" id="log">
-            <div class="empty">
-              <b>Waiting for the first action</b>
-              <p>
-                Use Step for one decision, or Run agent to play the episode.
-              </p>
-            </div>
-          </div>
-        </section>
-      </div>
-      <section class="details">
-        <div>
-          <h2>Checkpoint</h2>
-          <p>
-            10M action-balanced model, fine-tuned for four epochs on TCOD
-            WebShop demonstrations from the GiGPO-7B expert.
-          </p>
-          <a href="./model/model.safetensors" download
-            >Download weights <span>↧</span></a
-          >
-        </div>
-        <div>
-          <h2>Held-out evaluation</h2>
-          <div class="numbers">
-            <div><strong>31.6%</strong><span>SR @ 15</span></div>
-            <div><strong>31.8%</strong><span>SR @ 25</span></div>
-            <div><strong>31.8%</strong><span>SR @ 50</span></div>
-          </div>
-          <p>159 full successes on 500 tasks at 50 steps.</p>
-        </div>
-      </section>
-    </main>
-    <script type="module" src="app.js"></script>
-  </body>
+      </details>
+    </nav>
+  </section>
+  <aside aria-label="Agent response">
+    <div class="activity"><span id="status" role="status">Loading model…</span> <button hidden id="retry">Retry</button></div>
+    <div id="log"><p class="empty">Press Run to start, or Step for one decision.</p></div>
+    <footer id="action" hidden><span>Action</span> <strong id="last-action"></strong></footer>
+  </aside>
+</main>
+<script type="module" src="app.js?v=2"></script>
+</body>
 </html>

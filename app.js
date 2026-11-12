@@ -14,9 +14,9 @@ let ready = false,
   continuous = false;
 const atEnd = () => store?.page === "done" || store?.steps >= 50;
 
-function status(message, lamp = "ready") {
+function status(message) {
   el("status").textContent = message;
-  el("lamp").className = lamp;
+  el("status").hidden = message === "Ready";
 }
 function controls() {
   const busy = Boolean(pending) || continuous;
@@ -31,6 +31,7 @@ function draw() {
   frame = store.frame();
   const doc = iframe.contentDocument;
   if (!doc.documentElement.lang) {
+    doc.addEventListener("pointerdown", () => { el("settings").open = false; });
     doc.documentElement.lang = "en";
     for (const name of ["bootstrap.min", "native", "store"]) {
       const link = doc.createElement("link");
@@ -74,22 +75,13 @@ function draw() {
   doc.body.innerHTML = frame.html;
   doc.scrollingElement.scrollTop = 0;
   el("steps").textContent = "Step " + store.steps + " / 50";
-  el("score").textContent =
-    "Reward " + (store.page === "done" ? Number(store.reward.toFixed(3)) : "—");
-  const names = {
-    search: "Search",
-    results: "Search results · page " + store.number,
-    item: "Product detail",
-    features: "Features",
-    description: "Description",
-    review: "Reviews",
-    done: "Purchase complete",
-  };
-  el("scene").textContent = names[store.page];
+  el("score").hidden = store.page !== "done";
+  el("score").textContent = "Reward " + Number(store.reward.toFixed(3));
   controls();
 }
 function addEntry(owner) {
   log.querySelector(".empty")?.remove();
+  el("action").hidden = true;
   if (log.lastElementChild) log.lastElementChild.open = false;
   const details = document.createElement("details");
   details.open = true;
@@ -105,6 +97,7 @@ function addEntry(owner) {
 }
 function displayOutput(text) {
   const at = text.toUpperCase().lastIndexOf("ACTION:");
+  if (text && !pending?.cancel) el("status").hidden = true;
   entry.note.textContent = at < 0 ? text : text.slice(0, at).trim();
   entry.code.textContent = at < 0 ? "" : text.slice(at + 7).trim();
 }
@@ -112,16 +105,18 @@ function act(action) {
   const valid = store.apply(action, frame);
   entry.code.textContent = action || "(no action)";
   if (!valid) entry.summary.textContent += " · invalid action";
+  el("last-action").textContent = entry.code.textContent + (valid ? "" : " (invalid)");
+  el("action").hidden = false;
   draw();
   if (atEnd()) {
     continuous = false;
     status(
       store.page === "done"
-        ? "Purchase complete · reward " + Number(store.reward.toFixed(3))
+        ? "Purchase complete"
         : "Step limit reached",
     );
   } else if (!continuous)
-    status(ready ? "Ready" : el("status").textContent, ready ? "ready" : "");
+    status(ready ? "Ready" : el("status").textContent);
   controls();
 }
 function stop() {
@@ -129,7 +124,7 @@ function stop() {
   if (pending) {
     pending.cancel = true;
     worker.postMessage({ type: "stop" });
-    status("Stopping…", "");
+    status("Stopping…");
   } else if (ready) status("Paused");
   controls();
 }
@@ -138,7 +133,8 @@ function reset() {
   store = new Store(data, Number(el("goal").value));
   entry = null;
   log.innerHTML =
-    '<div class="empty"><b>Waiting for the first action</b><p>Use Step for one decision, or Run agent to play the episode.</p></div>';
+    '<p class="empty">Press Run to start, or Step for one decision.</p>';
+  el("action").hidden = true;
   if (ready) status("Ready");
   draw();
 }
@@ -160,14 +156,14 @@ function generate() {
     step: store.steps,
     greedy: el("policy").value === "greedy",
   });
-  status("Generating decision…", "");
+  status("Generating decision…");
   controls();
 }
 function fail(message) {
   pending = null;
   continuous = false;
   ready = false;
-  status(message, "error");
+  status(message);
   el("retry").hidden = false;
   controls();
 }
@@ -175,7 +171,7 @@ function initWorker() {
   worker?.terminate();
   ready = false;
   el("retry").hidden = true;
-  status("Loading model…", "");
+  status("Loading model…");
   controls();
   worker = new Worker(new URL("./worker.js", import.meta.url), {
     type: "module",
@@ -187,7 +183,6 @@ function initWorker() {
         m.progress === 100
           ? "Starting inference engine…"
           : "Loading model · " + m.progress + "%",
-        "",
       );
       return;
     }
@@ -232,6 +227,20 @@ function initWorker() {
   };
   worker.postMessage({ type: "load" });
 }
+const settings = el("settings");
+document.addEventListener("pointerdown", (event) => {
+  if (!settings.contains(event.target)) settings.open = false;
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && settings.open) {
+    settings.open = false;
+    settings.querySelector("summary").focus();
+  }
+});
+el("history").onchange = (event) => {
+  log.classList.toggle("history", event.target.checked);
+  log.lastElementChild?.scrollIntoView({ block: "nearest" });
+};
 el("goal").onchange = reset;
 el("reset").onclick = reset;
 el("step").onclick = generate;
