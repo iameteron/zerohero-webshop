@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fafaf9">
   <title>ZeroHero 10M in WebShop</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 <main>
@@ -18,7 +18,7 @@
     </div>
   </header>
   <section class="environment" aria-label="WebShop simulator">
-    <iframe id="store" sandbox="allow-same-origin" title="Interactive WebShop store"></iframe>
+    <iframe id="store" src="storefront.html?v=4" sandbox="allow-scripts" title="Interactive WebShop store"></iframe>
     <nav aria-label="Episode controls">
       <select id="mode" aria-label="Control mode"><option value="agent">Agent</option><option value="manual">Manual</option></select>
       <button id="run" title="Run agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2v12l10-6z"/></svg>Run</button>
@@ -53,6 +53,6 @@
   <input id="task-filter" type="search" placeholder="Search by instruction or task number" aria-label="Filter tasks" autofocus>
   <div id="task-list"></div>
 </dialog>
-<script type="module" src="app.js?v=3"></script>
+<script type="module" src="app.js?v=4"></script>
 </body>
 </html>

@@ -19,3 +19,5 @@ body{margin:0;background:white;color:#24312e;min-height:0}
   .row>.list-group-item{width:auto;margin:0;min-width:0}
   .result-img{max-height:95px}
 }
+
+.manual .list-group-item:has(.product-link){cursor:pointer}

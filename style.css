@@ -15,7 +15,7 @@
 [hidden] { display: none !important; }
 body { min-height: 100dvh; margin: 0; display: grid; place-items: center; }
 main {
-  width: min(1700px, calc(100% - 40px)); margin: 16px 0;
+  width: min(1540px, 92%); margin: 24px 0;
   display: grid; grid-template-columns: minmax(0, 2.35fr) minmax(270px, 1fr);
   gap: 8px 26px;
 }
@@ -23,7 +23,7 @@ header { min-width: 0; grid-column: 1; display: flex; align-items: baseline; jus
 h1 { flex: none; font: inherit; font-weight: 600; margin: 0; }
 select, button, summary { color: inherit; font: inherit; cursor: pointer; }
 .environment { grid-column: 1; min-width: 0; }
-iframe { display: block; width: 100%; height: clamp(340px, calc(100dvh - 122px), 1180px); background: white; border: 1px solid var(--line); border-radius: 6px; }
+iframe { display: block; width: 100%; height: clamp(340px, calc(100dvh - 168px), 1020px); background: white; border: 1px solid var(--line); border-radius: 6px; }
 nav { flex-wrap: wrap; display: flex; align-items: center; gap: 4px; margin-top: 12px; }
 nav button, #settings > summary {
   background: #e1e7d2; color: #4a6238; border: 1px solid #b6c1a2; border-radius: 6px;
@@ -81,10 +81,10 @@ dialog::backdrop { background: #1b251e45; }
 #task-list button[aria-current="true"], #task-list button:hover { background: #eff3e9; }
 @media (max-width: 760px) {
   body { align-items: start; }
-  main { width: calc(100% - 20px); grid-template-columns: minmax(0,1fr); margin: 10px 0; }
+  main { width: calc(100% - 32px); grid-template-columns: minmax(0,1fr); margin: 16px 0; }
   header { flex-wrap: wrap; }
   .tasks { max-width: 100%; }
-  iframe { height: clamp(320px, 68dvh, 820px); }
+  iframe { height: clamp(320px, 64dvh, 820px); }
   aside { grid-column: 1; grid-row: 3; contain: none; padding-top: 8px; }
   #log { max-height: 50dvh; }
 }

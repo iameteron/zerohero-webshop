@@ -3,7 +3,7 @@ import { compressed, Store } from "./shop.js";
 const el = (id) => document.getElementById(id);
 const iframe = el("store");
 const dialog = el("task-dialog");
-const doc = iframe.contentDocument;
+let renderVersion = 0;
 let data, store, worker, pending;
 let timeline = [],
   cursor = 0,
@@ -31,11 +31,13 @@ function controls() {
   el("policy").disabled = busy;
   const message = !data
     ? catalogError || "Loading catalog…"
-    : !manual() && !ready
-      ? modelStatus
-      : !manual() && live() && pending && !pending.cancel && !pending.text
-        ? "Generating decision…"
-        : "";
+    : manual() && store && !live()
+      ? "Recorded step. Choose Latest to continue shopping."
+      : !manual() && !ready
+        ? modelStatus
+        : !manual() && live() && pending && !pending.cancel && !pending.text
+          ? "Generating decision…"
+          : "";
   el("status").textContent = message;
   el("status").hidden = !message;
   el("retry").hidden = !catalogError && (manual() || !modelError);
@@ -51,14 +53,7 @@ function trace(text, action, actor) {
 function showStep(index) {
   cursor = index;
   const step = timeline[index];
-  doc.body.innerHTML = step.frame.html;
-  // Keep scrolling and selecting text possible while the controls are read-only.
-  if (!mayInteract()) {
-    for (const node of doc.querySelectorAll("input,button"))
-      node.disabled = true;
-    for (const link of doc.querySelectorAll("a")) link.removeAttribute("href");
-  }
-  doc.scrollingElement.scrollTop = 0;
+  paintStore();
   el("steps").textContent = "Step " + index + " / " + (timeline.length - 1);
   el("steps").title = "Selected step / recorded steps (episode limit 50)";
   el("score").hidden = step.reward === null;
@@ -152,46 +147,40 @@ el("forward").onclick = () => review(cursor + 1);
 el("latest").onclick = () => review(timeline.length - 1);
 el("mode").onchange = () => {
   stop();
-  if (store) showStep(cursor);
+  if (store) showStep(manual() ? timeline.length - 1 : cursor);
 };
 
-doc.documentElement.lang = "en";
-for (const name of ["bootstrap.min", "native", "store"]) {
-  const link = doc.createElement("link");
-  link.rel = "stylesheet";
-  link.href = new URL(
-    "assets/" + name + ".css" + (name === "store" ? "?v=3" : ""),
-    location.href,
+const settings = el("settings");
+function paintStore() {
+  if (!store) return;
+  // The sandbox gives the child an opaque origin, so address its window directly.
+  iframe.contentWindow.postMessage(
+    {
+      type: "render",
+      version: ++renderVersion,
+      html: timeline[cursor].frame.html,
+      interactive: mayInteract(),
+    },
+    "*",
   );
-  doc.head.append(link);
 }
-function search(form) {
-  const query = form.querySelector("[name=search_query]")?.value.trim();
-  if (mayInteract() && query) record("search[" + query + "]", "", "Manual");
-}
-doc.addEventListener("submit", (event) => {
-  event.preventDefault();
-  search(event.target);
-});
-doc.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" && event.target.matches("#form-buscar input")) {
-    event.preventDefault();
-    search(event.target.form);
+window.addEventListener("message", ({ source, origin, data: event }) => {
+  if (source !== iframe.contentWindow || origin !== "null") return;
+  if (event?.type === "store-ready") {
+    paintStore();
+    return;
+  }
+  if (event?.version !== renderVersion) return;
+  if (event.type === "store-focus") settings.open = false;
+  if (
+    event.type === "manual-action" &&
+    mayInteract() &&
+    typeof event.action === "string"
+  ) {
+    record(event.action, "", "Manual");
   }
 });
-doc.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-choice]");
-  if (!button) return;
-  event.preventDefault();
-  if (!mayInteract()) return;
-  if (button.closest("#form-buscar")) search(button.form);
-  else record("click[" + button.dataset.choice + "]", "", "Manual");
-});
-
-const settings = el("settings");
-doc.addEventListener("pointerdown", () => {
-  settings.open = false;
-});
+iframe.contentWindow.postMessage({ type: "connect" }, "*");
 document.addEventListener("pointerdown", (event) => {
   if (!settings.contains(event.target)) settings.open = false;
 });
