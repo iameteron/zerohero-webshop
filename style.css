@@ -54,9 +54,10 @@ a { color: #365f31; text-underline-offset: 2px; }
 aside { grid-column: 2; grid-row: 2; display: flex; flex-direction: column; min-width: 0; contain: size; }
 .activity { color: var(--muted); }
 .activity:has(#status[hidden]):has(#retry[hidden]) { display: none; }
-#log { overflow: auto; min-height: 0; flex: 1; scrollbar-width: thin; overflow-wrap: anywhere; line-height: 1.65; }
+#log { overflow: auto; min-height: 0; flex: 0 1 auto; scrollbar-width: thin; overflow-wrap: anywhere; line-height: 1.65; }
 #log { white-space: pre-wrap; }
-footer { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; min-height: 36px; overflow-wrap: anywhere; }
+footer { border-top: 1px solid var(--line); padding-top: 6px; margin-top: 6px; min-height: 36px; overflow-wrap: anywhere; }
+#log:empty + footer { border: 0; padding-top: 0; margin-top: 0; }
 footer span { color: var(--muted); margin-right: 6px; }
 strong { font-weight: 600; }
 
