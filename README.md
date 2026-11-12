@@ -1,6 +1,6 @@
 # ZeroHero in WebShop
 
-[Open the browser demo](https://iameteron.github.io/zerohero-webshop/). Choose one of 500 evaluation tasks, run the agent step by step or continuously, or operate the storefront yourself. The action trace shows the model's generated response. A purchase ends the episode and receives the WebShop reward. The episode limit is 50 actions.
+[Open the browser demo](https://iameteron.github.io/zerohero-webshop/). Choose one of 500 evaluation tasks, run the agent step by step or continuously, or operate the storefront yourself. Click the task instruction to search the list, or use the arrows beside it to switch tasks. Choose Manual to take over the current episode. The arrows beside the step counter pause generation and show recorded storefronts, actions and model responses. Latest returns to the end of the trajectory to continue playing. A purchase ends the episode and receives the WebShop reward. The episode limit is 50 actions.
 
 ## Checkpoint
 

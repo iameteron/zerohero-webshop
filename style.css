@@ -15,18 +15,16 @@
 [hidden] { display: none !important; }
 body { min-height: 100dvh; margin: 0; display: grid; place-items: center; }
 main {
-  width: min(1040px, calc(100% - 48px)); margin: 24px 0;
-  display: grid; grid-template-columns: minmax(0, min(512px, max(350px, calc(100dvh - 160px)))) minmax(0, 1fr);
-  gap: 8px 40px;
+  width: min(1700px, calc(100% - 40px)); margin: 16px 0;
+  display: grid; grid-template-columns: minmax(0, 2.35fr) minmax(270px, 1fr);
+  gap: 8px 26px;
 }
-header { grid-column: 1; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
-h1 { font: inherit; font-weight: 600; margin: 0; }
+header { min-width: 0; grid-column: 1; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+h1 { flex: none; font: inherit; font-weight: 600; margin: 0; }
 select, button, summary { color: inherit; font: inherit; cursor: pointer; }
-.task { color: var(--muted); white-space: nowrap; }
-.task select { font-weight: 600; border: 0; background: transparent; }
 .environment { grid-column: 1; min-width: 0; }
-iframe { display: block; width: 100%; aspect-ratio: 1; background: white; border: 1px solid var(--line); border-radius: 6px; }
-nav { display: flex; align-items: center; gap: 4px; margin-top: 12px; }
+iframe { display: block; width: 100%; height: clamp(340px, calc(100dvh - 122px), 1180px); background: white; border: 1px solid var(--line); border-radius: 6px; }
+nav { flex-wrap: wrap; display: flex; align-items: center; gap: 4px; margin-top: 12px; }
 nav button, #settings > summary {
   background: #e1e7d2; color: #4a6238; border: 1px solid #b6c1a2; border-radius: 6px;
   display: inline-flex; justify-content: center; align-items: center; height: 36px; width: 36px; padding: 0;
@@ -40,7 +38,7 @@ svg { width: 16px; height: 16px; fill: currentColor; }
 .stroke { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 :focus-visible { outline: 2px solid #39722c; outline-offset: 2px; }
 .readout { flex: 1; text-align: center; color: var(--muted); }
-#score::before { content: " · "; }
+
 #settings { position: relative; }
 #settings > summary { list-style: none; }
 #settings > summary::-webkit-details-marker { display: none; }
@@ -51,34 +49,48 @@ svg { width: 16px; height: 16px; fill: currentColor; }
 .drawer p { margin: 0 0 14px; }
 .drawer label { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .drawer select { border: 1px solid var(--line); border-radius: 4px; padding: 4px; background: white; }
-.drawer .toggle { justify-content: flex-start; margin: 12px 0; cursor: pointer; }
-.toggle input { margin: 0; accent-color: #39722c; }
 .drawer .links { margin: 0; padding-top: 10px; border-top: 1px solid var(--line); }
 a { color: #365f31; text-underline-offset: 2px; }
 aside { grid-column: 2; grid-row: 2; display: flex; flex-direction: column; min-width: 0; contain: size; }
 .activity { color: var(--muted); }
 .activity:has(#status[hidden]):has(#retry[hidden]) { display: none; }
 #log { overflow: auto; min-height: 0; flex: 1; scrollbar-width: thin; overflow-wrap: anywhere; line-height: 1.65; }
-.empty, .decision p { margin: 0; }
-.decision p { white-space: pre-wrap; }
-.decision code { white-space: pre-wrap; }
-.decision:not(:last-child), .decision:last-child summary, .decision:last-child code { display: none; }
-#log.history .decision:not(:last-child) { display: block; color: var(--muted); margin-bottom: 8px; }
-#log.history .decision:not(:last-child) summary { width: fit-content; }
-#log.history .decision:not(:last-child) p { margin: 4px 0; }
+#log { white-space: pre-wrap; }
 footer { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; min-height: 36px; overflow-wrap: anywhere; }
 footer span { color: var(--muted); margin-right: 6px; }
 strong { font-weight: 600; }
-@media (max-width: 720px) {
+
+.tasks { display: flex; align-items: center; gap: 3px; min-width: 0; }
+.tasks button, .dialog-head button { background: transparent; border: 0; border-radius: 4px; }
+.tasks button:hover:enabled, .dialog-head button:hover { background: #ecefe9; }
+.tasks button:disabled { opacity: .35; }
+.tasks button:not(#goal), .dialog-head button { width: 30px; height: 32px; flex: none; font-size: 21px; }
+#goal { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 4px; }
+#mode { height: 36px; padding: 0 5px; margin-right: 4px; border: 1px solid var(--line); border-radius: 6px; background: white; }
+.readout { display: flex; align-items: center; justify-content: center; gap: 7px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.readout button { width: 30px; height: 30px; background: transparent; border-color: var(--line); }
+.readout #latest { width: auto; padding: 0 6px; }
+#score { white-space: nowrap; }
+dialog { width: min(620px, calc(100% - 24px)); padding: 16px; border: 1px solid #cfd4ca; border-radius: 7px; color: inherit; background: white; }
+dialog::backdrop { background: #1b251e45; }
+.dialog-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.dialog-head h2 { margin: 0; font-size: 15px; }
+#task-filter { font: inherit; width: 100%; border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+#task-list { max-height: 56dvh; overflow: auto; margin-top: 8px; }
+#task-list button { width: 100%; text-align: left; padding: 8px 5px; border: 0; border-bottom: 1px solid var(--line); color: inherit; background: transparent; }
+#task-list button[aria-current="true"], #task-list button:hover { background: #eff3e9; }
+@media (max-width: 760px) {
   body { align-items: start; }
-  main { width: calc(100% - 32px); grid-template-columns: minmax(0,1fr); margin: 16px 0; }
-  nav button, #settings > summary { width: 40px; height: 40px; }
-  .readout { font-size: 13px; }
+  main { width: calc(100% - 20px); grid-template-columns: minmax(0,1fr); margin: 10px 0; }
+  header { flex-wrap: wrap; }
+  .tasks { max-width: 100%; }
+  iframe { height: clamp(320px, 68dvh, 820px); }
   aside { grid-column: 1; grid-row: 3; contain: none; padding-top: 8px; }
   #log { max-height: 50dvh; }
 }
-@media (max-width: 440px) {
-  nav { flex-wrap: wrap; }
+@media (max-width: 580px) {
+  .tasks { width: 100%; }
+  #goal { flex: 1; text-align: left; }
+  .readout { order: 1; flex-basis: 100%; justify-content: start; }
   #settings { margin-left: auto; }
-  .readout { order: 1; flex-basis: 100%; text-align: left; }
 }

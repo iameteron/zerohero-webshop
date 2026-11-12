@@ -5,28 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fafaf9">
   <title>ZeroHero 10M in WebShop</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <main>
   <header>
     <h1>ZeroHero 10M in WebShop</h1>
-    <label class="task">Task <select id="goal" aria-label="Evaluation task" disabled></select></label>
+    <div class="tasks" role="group" aria-label="Task selection">
+      <button id="prev-task" aria-label="Previous task" title="Previous task" disabled>‹</button>
+      <button id="goal" aria-haspopup="dialog" title="Choose a task" disabled>Choose task</button>
+      <button id="next-task" aria-label="Next task" title="Next task" disabled>›</button>
+    </div>
   </header>
   <section class="environment" aria-label="WebShop simulator">
     <iframe id="store" sandbox="allow-same-origin" title="Interactive WebShop store"></iframe>
-    <nav aria-label="Agent controls">
+    <nav aria-label="Episode controls">
+      <select id="mode" aria-label="Control mode"><option value="agent">Agent</option><option value="manual">Manual</option></select>
       <button id="run" title="Run agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2v12l10-6z"/></svg>Run</button>
       <button id="step" aria-label="Step" title="One agent step" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2v12l9-6zM12 2h2v12h-2z"/></svg></button>
       <button id="stop" aria-label="Stop" title="Stop agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="1"/></svg></button>
       <button id="reset" aria-label="Reset task" title="Restart this task" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path class="stroke" d="M14 3v4h-4m4 0a6 6 0 1 0-1 5"/></svg></button>
-      <span class="readout"><span id="steps">Step 0 / 50</span><span id="score" hidden></span></span>
+      <div class="readout" role="group" aria-label="Trajectory playback">
+        <button id="back" aria-label="Previous step" title="Previous recorded step" disabled>←</button>
+        <span id="steps">Step 0 / 0</span>
+        <button id="forward" aria-label="Next recorded step" title="Next recorded step" disabled>→</button>
+        <button id="latest" hidden>Latest</button>
+      </div>
+      <span id="score" hidden></span>
       <details id="settings">
         <summary aria-label="Settings" title="Settings"><svg viewBox="0 0 16 16" aria-hidden="true"><g class="stroke"><path d="M1 5h7m4 0h3M1 11h3m4 0h7"/><circle cx="10" cy="5" r="2"/><circle cx="6" cy="11" r="2"/></g></svg></summary>
         <div class="drawer">
           <p><strong>ZeroHero 10M</strong><br>TCOD SFT, epoch 4 · GiGPO-7B teacher</p>
           <label>Decoding <select id="policy"><option value="sample">Temperature 1</option><option value="greedy">Greedy</option></select></label>
-          <label class="toggle"><input type="checkbox" id="history"> Show previous steps</label>
           <p class="links"><a href="model/model.safetensors" download>Weights</a> · <a href="https://github.com/iameteron/zerohero-webshop#checkpoint">Evaluation</a> · <a href="https://github.com/iameteron/zerohero-webshop">GitHub</a></p>
         </div>
       </details>
@@ -35,9 +45,14 @@
   <aside aria-label="Agent response">
     <div class="activity"><span id="status" role="status">Loading model…</span> <button hidden id="retry">Retry</button></div>
     <div id="log"><p class="empty">Press Run to start, or Step for one decision.</p></div>
-    <footer id="action" hidden><span>Action</span> <strong id="last-action"></strong></footer>
+    <footer id="action" hidden><span id="actor">Action</span> <strong id="last-action"></strong></footer>
   </aside>
 </main>
-<script type="module" src="app.js?v=2"></script>
+<dialog id="task-dialog" aria-labelledby="task-heading">
+  <div class="dialog-head"><h2 id="task-heading">Choose task</h2><button id="close-tasks" aria-label="Close task list">×</button></div>
+  <input id="task-filter" type="search" placeholder="Search by instruction or task number" aria-label="Filter tasks" autofocus>
+  <div id="task-list"></div>
+</dialog>
+<script type="module" src="app.js?v=3"></script>
 </body>
 </html>

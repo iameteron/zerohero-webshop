@@ -12,3 +12,10 @@ body{margin:0;background:white;color:#24312e;min-height:0}
 .radio-toolbar label{padding:4px 7px}.radio-toolbar input:checked+label{background:#e0f2e5;outline:2px solid #297053}
 .agent-target{outline:3px solid #c28117!important;outline-offset:2px;background:#ffedb5!important}
 #form-buscar .glyphicon{display:none}form{margin-bottom:4px}img{font-size:11px}
+@media (min-width:760px){
+  .container{max-width:none}
+  .row:has(>.list-group-item){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+  .row:has(>.list-group-item)::before,.row:has(>.list-group-item)::after{display:none}
+  .row>.list-group-item{width:auto;margin:0;min-width:0}
+  .result-img{max-height:95px}
+}
