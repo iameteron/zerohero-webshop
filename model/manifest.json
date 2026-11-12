@@ -1,0 +1,13 @@
+{
+  "epoch": 4,
+  "parameters": 9983616,
+  "source_sha256": "df8a770ca2edcf6036107ef7d1e0d3e309b02883745dd719a37cff4ea09594a4",
+  "onnx_sha256": "39c7c9974a2f472be771c669d08b71deeec08d2ec5a96aa5ac292b037bfd89e5",
+  "bytes": 46301746,
+  "layers": 6,
+  "kv_heads": 3,
+  "head_dim": 64,
+  "context": 8192,
+  "response_cap": 1024,
+  "eos": 2
+}
