@@ -1,0 +1,13 @@
+{
+  "cycle": 100,
+  "parameters": 9983616,
+  "source_sha256": "67cafb50a8633f593e734f3b21d161719b298fab99540f19cb0b485269a3b3d9",
+  "onnx_sha256": "8f98f66fea4081e87d0514d9ebd2d36ca75f062ba3929043c90cf8973c1e011a",
+  "bytes": 46301746,
+  "layers": 6,
+  "kv_heads": 3,
+  "head_dim": 64,
+  "context": 8192,
+  "response_cap": 512,
+  "eos": 2
+}

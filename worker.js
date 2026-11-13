@@ -17,17 +17,17 @@ async function json(path) {
   if (!r.ok) throw Error("Could not load " + path);
   return r.json();
 }
-async function load() {
+async function load(directory = "model") {
   const [m, t, c, s] = await Promise.all([
-    json("model/manifest.json"),
-    json("model/tokenizer.json"),
-    json("model/tokenizer_config.json"),
+    json(directory + "/manifest.json"),
+    json(directory + "/tokenizer.json"),
+    json(directory + "/tokenizer_config.json"),
     compressed("assets/sampling.bin.gz"),
   ]);
   meta = m;
   tok = new Tokenizer(t, c);
   seeds = new DataView(await s.arrayBuffer());
-  const r = await fetch("model/decoder.onnx");
+  const r = await fetch(directory + "/decoder.onnx");
   if (!r.ok) throw Error("Weights unavailable");
   const reader = r.body.getReader(),
     bytes = new Uint8Array(m.bytes);
@@ -105,7 +105,7 @@ function promptIds(m) {
       "\nResponse:\n",
     ].join("\n");
   let ids = encode(render(m.observation));
-  while (h.length && ids.length + 1024 > meta.context) {
+  while (h.length && ids.length + meta.response_cap > meta.context) {
     h.shift();
     ids = encode(render(m.observation));
   }
@@ -125,7 +125,7 @@ function promptIds(m) {
           keep + body.slice(0, k) + marker + (n > k ? body.slice(k - n) : ""),
         ),
       );
-    } while (ids.length > meta.context - 1024 && n > 0);
+    } while (ids.length > meta.context - meta.response_cap && n > 0);
   }
   return ids;
 }
@@ -174,7 +174,7 @@ async function generate(m) {
       return;
     }
     const ids = promptIds(m),
-      cap = Math.min(1024, meta.context - ids.length),
+      cap = Math.min(meta.response_cap, meta.context - ids.length),
       generated = [],
       draw = rng(m.goal, m.step);
     for (let i = 0; i < ids.length && !cancel; i += 96) {
@@ -225,7 +225,7 @@ self.onmessage = ({ data: m }) => {
     return;
   }
   if (active !== null) return;
-  (m.type === "load" ? load() : generate(m)).catch((e) =>
+  (m.type === "load" ? load(m.directory) : generate(m)).catch((e) =>
     send("error", { message: e.message, id: m.id }),
   );
 };

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fafaf9">
   <title>ZeroHero 10M in WebShop</title>
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <main>
@@ -21,6 +21,10 @@
     <iframe id="store" src="storefront.html?v=4" sandbox="allow-scripts" title="Interactive WebShop store"></iframe>
     <nav aria-label="Episode controls">
       <select id="mode" aria-label="Control mode"><option value="agent">Agent</option><option value="manual">Manual</option></select>
+      <select id="model" aria-label="Model" title="Model · switching restarts this task">
+        <option value="model" data-description="TCOD SFT, epoch 4 · GiGPO-7B teacher">TCOD SFT · epoch 4</option>
+        <option value="model-ppo100" data-description="PPO, cycle 100 · initialized from TCOD SFT epoch 4">PPO · cycle 100</option>
+      </select>
       <button id="run" title="Run agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2v12l10-6z"/></svg>Run</button>
       <button id="step" aria-label="Step" title="One agent step" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2v12l9-6zM12 2h2v12h-2z"/></svg></button>
       <button id="stop" aria-label="Stop" title="Stop agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="1"/></svg></button>
@@ -35,9 +39,9 @@
       <details id="settings">
         <summary aria-label="Settings" title="Settings"><svg viewBox="0 0 16 16" aria-hidden="true"><g class="stroke"><path d="M1 5h7m4 0h3M1 11h3m4 0h7"/><circle cx="10" cy="5" r="2"/><circle cx="6" cy="11" r="2"/></g></svg></summary>
         <div class="drawer">
-          <p><strong>ZeroHero 10M</strong><br>TCOD SFT, epoch 4 · GiGPO-7B teacher</p>
+          <p><strong>ZeroHero 10M</strong><br><span id="model-description"></span></p>
           <label>Decoding <select id="policy"><option value="sample">Temperature 1</option><option value="greedy">Greedy</option></select></label>
-          <p class="links"><a href="model/model.safetensors" download>Weights</a> · <a href="https://github.com/iameteron/zerohero-webshop#checkpoint">Evaluation</a> · <a href="https://github.com/iameteron/zerohero-webshop">GitHub</a></p>
+          <p class="links"><a id="weights" href="model/model.safetensors" download>Weights</a> · <a href="https://github.com/iameteron/zerohero-webshop#checkpoint">Evaluation</a> · <a href="https://github.com/iameteron/zerohero-webshop">GitHub</a></p>
         </div>
       </details>
     </nav>
@@ -53,6 +57,6 @@
   <input id="task-filter" type="search" placeholder="Search by instruction or task number" aria-label="Filter tasks" autofocus>
   <div id="task-list"></div>
 </dialog>
-<script type="module" src="app.js?v=4"></script>
+<script type="module" src="app.js?v=5"></script>
 </body>
 </html>

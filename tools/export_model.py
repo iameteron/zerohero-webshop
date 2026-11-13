@@ -60,7 +60,12 @@ class Decoder(torch.nn.Module):
 
 
 if __name__ == '__main__':
-    p=argparse.ArgumentParser();p.add_argument('weights',type=Path);p.add_argument('model_dir',type=Path);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('weights',type=Path);p.add_argument('model_dir',type=Path)
+    stage=p.add_mutually_exclusive_group()
+    stage.add_argument('--epoch',type=int,default=4)
+    stage.add_argument('--cycle',type=int)
+    p.add_argument('--response-cap',type=int,default=1024)
+    a=p.parse_args()
     cfg=json.loads((a.model_dir/'config.json').read_text())
     model=Decoder(str(a.weights),cfg).eval()
     names=[f'{kind}_{i}' for i in range(cfg['num_hidden_layers']) for kind in ('key','value')]
@@ -72,6 +77,7 @@ if __name__ == '__main__':
         torch.onnx.export(model,(torch.tensor([[21,3,78]]),*cache),str(out),input_names=inputs,output_names=outputs,
                           opset_version=17,dynamic_axes=axes,dynamo=False)
     sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-    (a.model_dir/'manifest.json').write_text(json.dumps(dict(epoch=4,parameters=9983616,source_sha256=sha(a.weights),
+    stage_info = {'cycle': a.cycle} if a.cycle is not None else {'epoch': a.epoch}
+    (a.model_dir/'manifest.json').write_text(json.dumps(dict(**stage_info,parameters=9983616,source_sha256=sha(a.weights),
         onnx_sha256=sha(out),bytes=out.stat().st_size,layers=cfg['num_hidden_layers'],kv_heads=cfg['num_key_value_heads'],
-        head_dim=cfg['head_dim'],context=8192,response_cap=1024,eos=2),indent=2))
+        head_dim=cfg['head_dim'],context=8192,response_cap=a.response_cap,eos=2),indent=2))

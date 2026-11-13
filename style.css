@@ -67,7 +67,7 @@ strong { font-weight: 600; }
 .tasks button:disabled { opacity: .35; }
 .tasks button:not(#goal), .dialog-head button { width: 30px; height: 32px; flex: none; font-size: 21px; }
 #goal { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 4px; }
-#mode { height: 36px; padding: 0 5px; margin-right: 4px; border: 1px solid var(--line); border-radius: 6px; background: white; }
+#mode, #model { height: 36px; padding: 0 5px; margin-right: 4px; border: 1px solid var(--line); border-radius: 6px; background: white; }
 .readout { display: flex; align-items: center; justify-content: center; gap: 7px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .readout button { width: 30px; height: 30px; background: transparent; border-color: var(--line); }
 .readout #latest { width: auto; padding: 0 6px; }

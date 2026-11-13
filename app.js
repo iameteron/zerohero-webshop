@@ -227,11 +227,19 @@ function fail(message) {
   controls();
 }
 function initWorker() {
-  worker?.terminate();
+  if (worker) {
+    worker.onmessage = worker.onerror = null;
+    worker.terminate();
+  }
+  continuous = false;
+  pending = null;
+  const selected = el("model").selectedOptions[0];
+  el("model-description").textContent = selected.dataset.description;
+  el("weights").href = selected.value + "/model.safetensors";
   modelError = ready = false;
   modelStatus = "Loading model…";
   controls();
-  worker = new Worker(new URL("./worker.js", import.meta.url), {
+  worker = new Worker(new URL("./worker.js?v=2", import.meta.url), {
     type: "module",
   });
   worker.onerror = (e) => fail(e.message || "Model worker failed");
@@ -282,8 +290,12 @@ function initWorker() {
         if (continuous) generate();
       }, 200);
   };
-  worker.postMessage({ type: "load" });
+  worker.postMessage({ type: "load", directory: selected.value });
 }
+el("model").onchange = () => {
+  initWorker();
+  if (store) selectTask(store.id);
+};
 el("retry").onclick = () => {
   if (catalogError) location.reload();
   else initWorker();
