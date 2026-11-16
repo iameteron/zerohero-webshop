@@ -2,39 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fafaf9">
   <title>ZeroHero · WebShop and Crafter</title>
-  <style>
-    @font-face { font-family: Inter; src: url("vendor/inter-latin.woff2") format("woff2"); font-display: swap; }
-    * { box-sizing: border-box; }
-    body { margin: 0; display: flex; flex-direction: column; height: 100vh; height: 100dvh; background: #fafaf9; color: #1c1f1a; font: 14px/1.5 Inter, system-ui, sans-serif; }
-    header { flex: none; border-bottom: 1px solid #dfe2da; }
-    nav { display: flex; align-items: center; gap: 4px; width: min(1540px, 92%); margin: auto; padding: 6px 0; }
-    strong { margin-right: 14px; }
-    nav a { padding: 6px 12px; border-radius: 5px; color: #485143; text-decoration: none; }
-    nav a:hover { background: #eff2eb; }
-    nav a[aria-current="page"] { background: #e1e9d7; color: #25491f; font-weight: 600; }
-    nav a:focus-visible { outline: 2px solid #39722c; }
-    iframe { display: block; flex: 1; min-height: 0; width: 100%; border: 0; }
-  </style>
+  <link rel="canonical" href="https://iameteron.github.io/zerohero/">
+  <script>location.replace("/zerohero/" + location.search + location.hash);</script>
+  <noscript><meta http-equiv="refresh" content="0; url=/zerohero/"></noscript>
 </head>
-<body>
-  <header><nav aria-label="Environment">
-    <strong>ZeroHero</strong>
-    <a id="webshop" href="./">WebShop</a>
-    <a id="crafter" href="?env=crafter">Crafter</a>
-  </nav></header>
-  <script>
-    const crafter = new URLSearchParams(location.search).get("env") === "crafter";
-    const selected = document.getElementById(crafter ? "crafter" : "webshop");
-    selected.setAttribute("aria-current", "page");
-    document.title = "ZeroHero · " + selected.textContent;
-    const simulator = document.createElement("iframe");
-    simulator.title = selected.textContent + " simulator";
-    simulator.src = crafter ? "https://tviskaron.github.io/zero-wasm/text.html" : "./webshop.html";
-    document.body.append(simulator);
-  </script>
-  <noscript>Enable JavaScript to run the agents and simulators.</noscript>
-</body>
+<body><a href="/zerohero/">Open ZeroHero</a></body>
 </html>

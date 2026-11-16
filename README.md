@@ -1,8 +1,8 @@
 # ZeroHero in WebShop and Crafter
 
-[Open the browser demo](https://iameteron.github.io/zerohero-webshop/). Select **WebShop** or **Crafter** at the top. Switching environments opens a fresh session. Only the selected simulator and agent load.
+[Open the browser demo](https://iameteron.github.io/zerohero/). Select **WebShop** or **Crafter** at the top. Switching environments opens a fresh session. Only the selected simulator and agent load.
 
-[Open Crafter directly](https://iameteron.github.io/zerohero-webshop/?env=crafter). The Crafter tab embeds the [ZeroHero in Crafter browser demo](https://github.com/Tviskaron/zero-wasm), starting with its 5M text agent (PPO iteration 300). Press Step for one agent decision or Run for continuous play. The Crafter simulator, runtime and weights are served by that project and execute locally in the browser.
+[Open Crafter directly](https://iameteron.github.io/zerohero/?env=crafter). The Crafter tab embeds the [ZeroHero in Crafter browser demo](https://github.com/Tviskaron/zero-wasm), starting with its 5M text agent (PPO iteration 300). Press Step for one agent decision or Run for continuous play. The Crafter simulator, runtime and weights are served by that project and execute locally in the browser.
 
 ## WebShop
 
@@ -25,7 +25,7 @@ Download FP32 weights and inspect the export manifests for [TCOD SFT](model/) an
 
 ## Runtime
 
-The static page downloads the selected FP32 ONNX decoder (46.3 MB) and runs it in a dedicated web worker with ONNX Runtime Web and a KV cache. To serve a checkout locally, run `python3 -m http.server 8000` at its root and open `http://localhost:8000/`. Use a modern browser with WebAssembly SIMD, Web Crypto and DecompressionStream. Model inference, search and reward calculation run on the device. Product photos load from catalog image URLs.
+The static page downloads the selected FP32 ONNX decoder (46.3 MB) and runs it in a dedicated web worker with ONNX Runtime Web and a KV cache. To serve a checkout locally, run `python3 -m http.server 8000` at its root and open `http://localhost:8000/webshop.html`. Use a modern browser with WebAssembly SIMD, Web Crypto and DecompressionStream. Model inference, search and reward calculation run on the device. Product photos load from catalog image URLs.
 
 The environment contains the 1,000-product small_synthetic catalog and the 500 native evaluation tasks at goal seed 1000. The renderer uses the original WebShop page templates and the styling of the ZeroHero browser viewer. Browsing, item options, pagination, subpages and purchase rewards update in response to actions. Search uses pre-exported Lucene term scores. The client calculates rewards from native per-product matches and the options selected in the current episode.
 
