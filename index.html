@@ -4,59 +4,37 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fafaf9">
-  <title>ZeroHero 10M in WebShop</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <title>ZeroHero · WebShop and Crafter</title>
+  <style>
+    @font-face { font-family: Inter; src: url("vendor/inter-latin.woff2") format("woff2"); font-display: swap; }
+    * { box-sizing: border-box; }
+    body { margin: 0; display: flex; flex-direction: column; height: 100vh; height: 100dvh; background: #fafaf9; color: #1c1f1a; font: 14px/1.5 Inter, system-ui, sans-serif; }
+    header { flex: none; border-bottom: 1px solid #dfe2da; }
+    nav { display: flex; align-items: center; gap: 4px; width: min(1540px, 92%); margin: auto; padding: 6px 0; }
+    strong { margin-right: 14px; }
+    nav a { padding: 6px 12px; border-radius: 5px; color: #485143; text-decoration: none; }
+    nav a:hover { background: #eff2eb; }
+    nav a[aria-current="page"] { background: #e1e9d7; color: #25491f; font-weight: 600; }
+    nav a:focus-visible { outline: 2px solid #39722c; }
+    iframe { display: block; flex: 1; min-height: 0; width: 100%; border: 0; }
+  </style>
 </head>
 <body>
-<main>
-  <header>
-    <h1>ZeroHero 10M in WebShop</h1>
-    <div class="tasks" role="group" aria-label="Task selection">
-      <button id="prev-task" aria-label="Previous task" title="Previous task" disabled>‹</button>
-      <button id="goal" aria-haspopup="dialog" title="Choose a task" disabled>Choose task</button>
-      <button id="next-task" aria-label="Next task" title="Next task" disabled>›</button>
-    </div>
-  </header>
-  <section class="environment" aria-label="WebShop simulator">
-    <iframe id="store" src="storefront.html?v=4" sandbox="allow-scripts" title="Interactive WebShop store"></iframe>
-    <nav aria-label="Episode controls">
-      <select id="mode" aria-label="Control mode"><option value="agent">Agent</option><option value="manual">Manual</option></select>
-      <select id="model" aria-label="Model" title="Model · switching restarts this task">
-        <option value="model" data-description="TCOD SFT, epoch 4 · GiGPO-7B teacher">TCOD SFT · epoch 4</option>
-        <option value="model-ppo100" data-description="PPO, cycle 100 · initialized from TCOD SFT epoch 4">PPO · cycle 100</option>
-      </select>
-      <button id="run" title="Run agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2v12l10-6z"/></svg>Run</button>
-      <button id="step" aria-label="Step" title="One agent step" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2v12l9-6zM12 2h2v12h-2z"/></svg></button>
-      <button id="stop" aria-label="Stop" title="Stop agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="1"/></svg></button>
-      <button id="reset" aria-label="Reset task" title="Restart this task" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path class="stroke" d="M14 3v4h-4m4 0a6 6 0 1 0-1 5"/></svg></button>
-      <div class="readout" role="group" aria-label="Trajectory playback">
-        <button id="back" aria-label="Previous step" title="Previous recorded step" disabled>←</button>
-        <span id="steps">Step 0 / 0</span>
-        <button id="forward" aria-label="Next recorded step" title="Next recorded step" disabled>→</button>
-        <button id="latest" hidden>Latest</button>
-      </div>
-      <span id="score" hidden></span>
-      <details id="settings">
-        <summary aria-label="Settings" title="Settings"><svg viewBox="0 0 16 16" aria-hidden="true"><g class="stroke"><path d="M1 5h7m4 0h3M1 11h3m4 0h7"/><circle cx="10" cy="5" r="2"/><circle cx="6" cy="11" r="2"/></g></svg></summary>
-        <div class="drawer">
-          <p><strong>ZeroHero 10M</strong><br><span id="model-description"></span></p>
-          <label>Decoding <select id="policy"><option value="sample">Temperature 1</option><option value="greedy">Greedy</option></select></label>
-          <p class="links"><a id="weights" href="model/model.safetensors" download>Weights</a> · <a href="https://github.com/iameteron/zerohero-webshop#checkpoint">Evaluation</a> · <a href="https://github.com/iameteron/zerohero-webshop">GitHub</a></p>
-        </div>
-      </details>
-    </nav>
-  </section>
-  <aside aria-label="Agent response">
-    <div class="activity"><span id="status" role="status">Loading model…</span> <button hidden id="retry">Retry</button></div>
-    <div id="log"><p class="empty">Press Run to start, or Step for one decision.</p></div>
-    <footer id="action" hidden><span id="actor">Action</span> <strong id="last-action"></strong></footer>
-  </aside>
-</main>
-<dialog id="task-dialog" aria-labelledby="task-heading">
-  <div class="dialog-head"><h2 id="task-heading">Choose task</h2><button id="close-tasks" aria-label="Close task list">×</button></div>
-  <input id="task-filter" type="search" placeholder="Search by instruction or task number" aria-label="Filter tasks" autofocus>
-  <div id="task-list"></div>
-</dialog>
-<script type="module" src="app.js?v=5"></script>
+  <header><nav aria-label="Environment">
+    <strong>ZeroHero</strong>
+    <a id="webshop" href="./">WebShop</a>
+    <a id="crafter" href="?env=crafter">Crafter</a>
+  </nav></header>
+  <script>
+    const crafter = new URLSearchParams(location.search).get("env") === "crafter";
+    const selected = document.getElementById(crafter ? "crafter" : "webshop");
+    selected.setAttribute("aria-current", "page");
+    document.title = "ZeroHero · " + selected.textContent;
+    const simulator = document.createElement("iframe");
+    simulator.title = selected.textContent + " simulator";
+    simulator.src = crafter ? "https://tviskaron.github.io/zero-wasm/text.html" : "./webshop.html";
+    document.body.append(simulator);
+  </script>
+  <noscript>Enable JavaScript to run the agents and simulators.</noscript>
 </body>
 </html>
