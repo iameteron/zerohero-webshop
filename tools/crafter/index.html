@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fafaf9">
+  <title>ZeroHero vision 12.6M with memory in Crafter</title>
+  <meta name="description" content="A 12.6M-parameter vision Crafter agent that plays from the game screen and keeps its own memory. The game and the model run locally in your browser using WebAssembly.">
+  <link rel="preload" href="./vendor/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main aria-label="Crafter">
+    <header class="top">
+      <h1>ZeroHero vision 12.6M with memory in Crafter</h1>
+      <span class="seed" title="Current world seed">World seed <b id="world-seed">0</b></span>
+    </header>
+
+    <section class="game-panel">
+      <div class="world-stage">
+        <canvas id="world" width="576" height="576" aria-label="Live Crafter world"></canvas>
+        <div id="world-loading" class="stage-overlay" role="status" aria-label="Game and model loading">
+          <div id="world-loading-row" class="loading-row" data-state="loading"><span class="loader" aria-hidden="true"></span><div><strong>Game</strong><span id="world-loading-detail">Loading Crafter…</span></div></div>
+          <div id="model-loading-row" class="loading-row" data-state="loading"><span class="loader" aria-hidden="true"></span><div><strong id="model-loading-label">Visual · PPO-RA · 1B steps</strong><span id="model-loading-detail">Loading the default model…</span><progress id="model-loading-progress" max="1" aria-label="Model download progress" hidden></progress></div></div>
+        </div>
+        <div id="episode-end" class="stage-overlay episode-end" role="status" aria-label="Episode result" hidden>
+          <h2 id="episode-end-title">Game over</h2>
+          <p id="episode-end-detail"></p>
+          <button id="restart" class="primary">New world</button>
+        </div>
+      </div>
+      <nav class="bar" aria-label="Game controls">
+        <div class="agent-controls">
+          <button id="run" class="primary" disabled aria-label="Run agent" title="Run the agent continuously"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg>Run</button>
+          <button id="step" class="icon" disabled aria-label="One agent step" title="One agent step"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5v14l10-7z" fill="currentColor"/><path d="M18 5v14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+          <button id="stop" class="icon" disabled aria-label="Stop agent" title="Stop agent"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg></button>
+          <button id="new-world" class="icon" disabled aria-label="New random world" title="New random world"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.34-5.66L20 9"/><path d="M20 4v5h-5"/></svg></button>
+        </div>
+        <select id="model" aria-label="Model" title="Model · switching starts a new world">
+          <option value="visual-ppo-ra-1b" selected>Visual · PPO-RA · 1B steps</option>
+          <option value="visual-ppo-ra-100m">Visual · PPO-RA · 100M steps</option>
+          <option value="text-ppo-ra">Text · PPO-RA · 63.6M steps</option>
+          <option value="vision-memory">Visual · PPO · 874M steps</option>
+        </select>
+        <div id="readout" class="readout">Step 0/512, 0/22 achievements</div>
+        <details class="drawer"><summary aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></summary><div class="drawer-content">
+          <section class="drawer-section">
+            <h2>Model</h2><a id="model-weights" href="https://huggingface.co/eteron/ZeroHero-Crafter-Visual-12.6M-PPO-RA-1B-steps" target="_blank" rel="noopener">Model details and weights ↗</a>
+            <p id="model-detail" class="hint" role="status">12.6M parameters, 52 MiB. Loading automatically.</p>
+            <div class="field-row">
+              <label class="field">Sampling<select id="temperature"><option value="1" selected>Temperature 1</option><option value="0">Greedy</option></select></label>
+              <label class="field">Token limit<select id="token-limit"><option value="256">256</option><option value="512" selected>512</option><option value="1024">1,024</option></select></label>
+            </div>
+            <label class="field spaced">Delay between steps<select id="step-delay"><option value="0">None</option><option value="250">0.25 s</option><option value="500" selected>0.5 s</option><option value="1000">1 s</option><option value="2000">2 s</option></select></label>
+            <label class="toggle"><input id="show-stats" type="checkbox">Show token and reward stats</label>
+          </section>
+          <section class="drawer-section">
+            <h2>World</h2>
+            <div class="field"><label for="seed">Seed</label><div class="seed-row"><input id="seed" type="number" min="0" max="2147483647" value="0"><button id="reset" disabled>Reset</button></div></div>
+            <div id="vitals" class="vitals" aria-label="Player status"></div>
+          </section>
+          <section class="drawer-section">
+            <h2>Achievements <span id="achievement-count">0 of 22</span></h2>
+            <div id="achievement-list" class="achievement-list"></div>
+          </section>
+          <details class="manual"><summary><span>Manual control</span><small>WASD, Space</small></summary><div class="manual-buttons"><button data-action="Move West" disabled aria-label="Move west"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button data-action="Move North" disabled aria-label="Move north"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button><button data-action="Move South" disabled aria-label="Move south"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button><button data-action="Move East" disabled aria-label="Move east"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><button data-action="Do" disabled>Interact</button><select id="manual-action" aria-label="Crafting or other action" disabled></select><button id="manual-go" disabled>Do</button></div></details>
+          <details class="observation"><summary><span>Model input</span></summary><pre id="observation">Loading observation…</pre></details>
+        </div></details>
+      </nav>
+    </section>
+
+    <aside class="reasoning" aria-label="Model reasoning">
+      <div id="token-stats" class="token-stats" hidden></div>
+      <div class="response-wrap"><pre id="response">The game and the vision model load together. Press Run to start the agent, or Step for one decision.
+
+Choose a checkpoint below the game. Visual agents use the screen and their own memory; the text agent uses text observations and recent actions. Switching models starts a fresh world. Everything runs locally in this browser tab using WebAssembly.</pre><div id="thinking" class="thinking" hidden><i></i><span>Reading the screen…</span></div></div>
+      <footer id="action-footer" class="action-footer" hidden><span>Action: <strong id="last-action">none</strong></span><small id="action-note"></small></footer>
+    </aside>
+
+    <div id="notice" class="notice" role="alert" hidden></div>
+  </main>
+  <script type="module" src="./built/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "parameters": 5033600,
+  "source_sha256": "a8d8f523e1f2d6a7be575de69832c131f76a217faa389679e5b256a6f28836ed",
+  "onnx_sha256": "340bccea30447bcaffc51048ed98b8b49e8351297c3d48a04c26d5e4fe86af9f",
+  "bytes": 24404464,
+  "layers": 6,
+  "kv_heads": 4,
+  "head_dim": 32,
+  "context": 4096,
+  "response_cap": 1024,
+  "eos": 2,
+  "label": "Text \u00b7 PPO-RA \u00b7 63.6M steps",
+  "hf_repo": "eteron/ZeroHero-Crafter-Text-5M-PPO-RA-63.6M-steps",
+  "env_steps": 63635456,
+  "method": "PPO-RA",
+  "validation": {
+    "max_logit_error": 1.2218952178955078e-05,
+    "greedy_tokens_checked": 12
+  },
+  "instructions": "You are an agent playing Crafter. The following are the only valid actions you can take in the game, followed by a short description of each action:\n\nNoop: do nothing,\nMove West: move west on flat ground,\nMove East: move east on flat ground,\nMove North: move north on flat ground,\nMove South: move south on flat ground,\nDo: Multiuse action to collect material, drink from lake and hit creature in front,\nSleep: sleep when energy level is below maximum,\nPlace Stone: place a stone in front,\nPlace Table: place a table,\nPlace Furnace: place a furnace,\nPlace Plant: place a plant,\nMake Wood Pickaxe: craft a wood pickaxe with a nearby table and wood in inventory,\nMake Stone Pickaxe: craft a stone pickaxe with a nearby table, wood, and stone in inventory,\nMake Iron Pickaxe: craft an iron pickaxe with a nearby table and furnace, wood, coal, and iron in inventory,\nMake Wood Sword: craft a wood sword with a nearby table and wood in inventory,\nMake Stone Sword: craft a stone sword with a nearby table, wood, and stone in inventory,\nMake Iron Sword: craft an iron sword with a nearby table and furnace, wood, coal, and iron in inventory.\n\nThese are the game achievements you can get:\n1. Collect Wood\n2. Place Table\n3. Eat Cow\n4. Collect Sapling\n5. Collect Drink\n6. Make Wood Pickaxe\n7. Make Wood Sword\n8. Place Plant\n9. Defeat Zombie\n10. Collect Stone\n11. Place Stone\n12. Eat Plant\n13. Defeat Skeleton\n14. Make Stone Pickaxe\n15. Make Stone Sword\n16. Wake Up\n17. Place Furnace\n18. Collect Coal\n19. Collect Iron\n20. Make Iron Pickaxe\n21. Make Iron Sword\n22. Collect Diamond\n\nIn a moment I will present a history of actions and observations from the game.\nYour goal is to get as far as possible by completing all the achievements.\n\nPLAY!"
+}

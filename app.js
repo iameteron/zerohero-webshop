@@ -235,7 +235,7 @@ function initWorker() {
   pending = null;
   const selected = el("model").selectedOptions[0];
   el("model-description").textContent = selected.dataset.description;
-  el("weights").href = selected.value + "/model.safetensors";
+  el("weights").href = selected.dataset.weights || selected.value + "/model.safetensors";
   modelError = ready = false;
   modelStatus = "Loading model…";
   controls();

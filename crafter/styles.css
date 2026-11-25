@@ -1,0 +1,172 @@
+/* Inter is vendored by build.mjs; the demo needs no font CDN. */
+@font-face {
+  font-family: "Inter";
+  src: url("./vendor/fonts/inter-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #fafaf9;
+  --surface: #fff;
+  --ink: #1c1f1a;
+  --ink-2: #474d43;
+  --disabled: #9ba196;
+  --line: #e2e5de;
+  --hover: #eff1ec;
+  --accent: #39722c;
+  --accent-hover: #2d5e22;
+  --stage: #1d271f;
+  --radius: 6px;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font: 400 14px/1.5 var(--sans);
+  color: var(--ink);
+  background: var(--bg);
+}
+
+* { box-sizing: border-box; }
+/* One text size everywhere; weight carries the hierarchy. */
+h1, h2, small, pre { font: inherit; }
+body { margin: 0; min-height: 100dvh; display: grid; place-items: center; }
+[hidden] { display: none !important; }
+svg { width: 16px; height: 16px; flex: none; }
+
+/* Layout: the game column sets the row height; reasoning stretches to match. */
+main {
+  width: min(1040px, calc(100vw - 48px));
+  margin: 24px 0;
+  display: grid;
+  grid-template-columns: minmax(0, min(512px, calc(100dvh - 160px))) minmax(300px, 1fr);
+  gap: 8px 40px;
+}
+.game-panel { grid-column: 1; grid-row: 2; min-width: 0; }
+
+/* Header */
+/* The header sits above the game only, so the seed lands at its top right corner. */
+.top { grid-column: 1; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 24px; }
+h1 { margin: 0; font-weight: 600; }
+h1 span { font-weight: 400; color: var(--ink-2); }
+.seed { color: var(--ink-2); }
+.seed b { font-weight: 600; color: var(--ink); user-select: all; }
+
+/* World */
+.world-stage { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius); background: var(--stage); }
+canvas { display: block; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.stage-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; background: var(--stage); color: #e6ebe0; }
+.loader { width: 18px; height: 18px; border: 2px solid #4a5a40; border-top-color: #e6ebe0; border-radius: 50%; animation: spin 1s linear infinite; }
+.stage-overlay.has-world { background: #1d271fe6; }
+.episode-end { background: #142010dd; }
+.episode-end h2 { margin: 0; font-weight: 600; }
+.episode-end p { margin: 0; color: #bac5b3; }
+.episode-end button { margin-top: 6px; }
+.loading-row { display: flex; align-items: flex-start; gap: 14px; width: min(320px, 100%); text-align: left; }
+.loading-row + .loading-row { margin-top: 12px; }
+.loading-row .loader { flex: none; margin-top: 2px; }
+.loading-row > div { flex: 1; min-width: 0; }
+.loading-row strong { display: block; font-weight: 600; }
+.loading-row div > span { display: block; margin-top: 3px; color: #bac5b3; }
+.loading-row[data-state="ready"] .loader, .loading-row[data-state="idle"] .loader, .loading-row[data-state="error"] .loader { border: 0; animation: none; text-align: center; line-height: 18px; }
+.loading-row[data-state="ready"] .loader::before { content: "✓"; }
+.loading-row[data-state="idle"] .loader::before { content: "–"; }
+.loading-row[data-state="error"] .loader::before { content: "!"; }
+#model-loading-progress { display: block; width: 100%; height: 4px; margin-top: 10px; border: 0; border-radius: 2px; overflow: hidden; appearance: none; background: #4a5a40; accent-color: #bad2a8; }
+#model-loading-progress::-webkit-progress-bar { background: #4a5a40; }
+#model-loading-progress::-webkit-progress-value { background: #bad2a8; }
+#model-loading-progress::-moz-progress-bar { background: #bad2a8; }
+@media (prefers-reduced-motion: reduce) { .loader { animation: none; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Controls */
+button, input, select { height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); font: inherit; color: inherit; }
+button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-color: #b9b18c; background: #eee5ca; color: #565033; font-weight: 500; cursor: pointer; }
+button:hover:enabled { background: #e2d6b1; }
+button:disabled, select:disabled, input:disabled { color: var(--disabled); cursor: default; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { padding: 0 16px 0 12px; border-color: var(--accent); background: var(--accent); color: #fff; }
+button.primary:hover:enabled { background: var(--accent-hover); }
+button.primary:disabled { border-color: #adbd97; background: #adbd97; color: #fff; }
+button.icon, .drawer > summary { width: 36px; padding: 0; border: 1px solid #b6c1a2; background: #e1e7d2; color: #4a6238; }
+button.icon:disabled { border-color: #dce0d2; background: #eef0e7; color: #a9b09c; }
+button.icon:hover:enabled, .drawer > summary:hover, .drawer[open] > summary { background: #cbd7b6; }
+#step:not(:disabled) { border-color: #a8bc88; background: #d5e5b8; color: #386428; }
+#step:hover:enabled { background: #c3d99e; }
+#stop:not(:disabled) { border-color: #c1a77d; background: #eddfc6; color: #80552c; }
+#stop:hover:enabled { background: #dfcaa6; }
+
+.bar { position: relative; display: flex; align-items: center; gap: 16px; padding-top: 12px; }
+.agent-controls { display: flex; align-items: center; gap: 4px; }
+.agent-controls .primary { margin-right: 4px; }
+.readout { flex: 1; min-width: 0; text-align: center; color: var(--ink-2); }
+
+/* Settings popover */
+summary { list-style: none; cursor: pointer; }
+summary::-webkit-details-marker { display: none; }
+.drawer > summary { display: inline-flex; align-items: center; justify-content: center; height: 36px; border-radius: var(--radius); }
+.drawer { position: relative; }
+.drawer-content { position: absolute; right: 0; bottom: calc(100% + 8px); z-index: 2; width: min(360px, calc(100vw - 32px)); max-height: min(560px, calc(100dvh - 160px)); overflow: auto; padding: 0 20px; border: 1px solid #cfd4ca; border-radius: 8px; background: var(--surface); scrollbar-width: thin; }
+.drawer-section { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.drawer-section h2 { display: flex; justify-content: space-between; margin: 0 0 12px; font-weight: 600; }
+.field { display: grid; gap: 6px; color: var(--ink-2); }
+.field select, .field input { width: 100%; min-width: 0; color: var(--ink); }
+.checkpoint { color: var(--ink); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.field.spaced { margin-top: 12px; }
+.hint { margin: 6px 0 0; color: var(--ink-2); }
+.seed-row { display: flex; gap: 8px; }
+.toggle { display: flex; align-items: center; gap: 8px; margin-top: 12px; cursor: pointer; }
+.toggle input { width: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--accent); cursor: pointer; }
+.vitals { display: flex; flex-wrap: wrap; column-gap: 16px; margin-top: 12px; color: var(--ink-2); }
+.vitals b { font-weight: 600; color: var(--ink); }
+#achievement-count { font-weight: 400; color: var(--ink-2); }
+.achievement-list { color: var(--ink-2); }
+
+.drawer details + details { border-top: 1px solid var(--line); }
+.drawer details > summary { display: flex; align-items: center; gap: 12px; padding: 14px 0; font-weight: 600; }
+.drawer details > summary > span { flex: 1; white-space: nowrap; }
+.drawer details > summary small { font-weight: 400; color: var(--ink-2); }
+.drawer details > summary::after { content: ""; width: 6px; height: 6px; margin: 0 2px 3px; border-right: 1.5px solid var(--ink-2); border-bottom: 1.5px solid var(--ink-2); transform: rotate(45deg); }
+.drawer details[open] > summary::after { margin-bottom: -3px; transform: rotate(-135deg); }
+.manual-buttons { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 16px; }
+.manual-buttons button { min-width: 36px; padding: 0 10px; }
+.manual-buttons select { flex: 1 1 160px; min-width: 0; }
+#observation { max-height: 240px; margin: 0 0 16px; overflow: auto; font-family: var(--mono); line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; scrollbar-width: thin; }
+
+/* Reasoning: `contain: size` keeps long output from stretching the grid row. */
+.reasoning { grid-column: 2; grid-row: 2; display: flex; flex-direction: column; min-width: 0; contain: size; }
+.token-stats { padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+.response-wrap { flex: 1; min-height: 0; padding: 0 0 12px; overflow: auto; overflow-anchor: none; scroll-behavior: auto; scrollbar-width: thin; }
+/* pre-line keeps the model's line breaks but collapses runs of spaces. */
+#response { margin: 0; line-height: 1.65; white-space: pre-line; overflow-wrap: anywhere; }
+.thinking { padding-top: 8px; color: var(--ink-2); }
+.thinking i { display: none; }
+/* Fixed height, so a new action never resizes the scroller above it. */
+.action-footer { display: flex; align-items: center; gap: 16px; height: 48px; padding-top: 12px; border-top: 1px solid var(--line); }
+.action-footer > span { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#last-action { font-weight: 600; }
+#action-note { margin-left: auto; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--ink-2); }
+
+/* Answer blocks: reasoning, action (with the model's probability of it), memory, and any other text. */
+.response-block { padding: 8px 0; border-top: 1px solid var(--line); }
+.response-block:first-child { padding-top: 0; border-top: 0; }
+.response-block-label { font-weight: 600; }
+.response-block-body strong { font-weight: 600; }
+.response-block-other { color: var(--ink-2); }
+
+.notice { grid-column: 1 / -1; margin-top: 12px; padding: 12px 14px; border: 1px solid #e8d3b8; border-radius: var(--radius); background: #fbf5ec; color: #6e4a20; line-height: 1.6; white-space: pre-wrap; }
+
+@media (max-width: 720px) {
+  main { width: calc(100vw - 32px); margin: 16px 0; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .reasoning { grid-column: 1; grid-row: 3; margin-top: 8px; contain: none; height: min(50dvh, 360px); }
+  button, button.icon, .drawer > summary { height: 40px; }
+  button.icon, .drawer > summary { width: 40px; }
+  /* The step readout gets its own line so it never clips beside the buttons. */
+  .bar { flex-wrap: wrap; gap: 8px; }
+  .drawer { margin-left: auto; }
+  /* Open settings below the button; there is rarely room above it on a phone. */
+  .drawer-content { top: calc(100% + 8px); bottom: auto; }
+  .readout { order: 3; flex-basis: 100%; text-align: left; }
+}
+
+#model { max-width: 100%; min-width: 210px; padding: 7px; font: inherit; border: 1px solid #dfe2da; border-radius: 6px; background: #fff; }

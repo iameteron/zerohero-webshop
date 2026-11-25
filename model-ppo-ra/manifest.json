@@ -1,0 +1,21 @@
+{
+  "parameters": 9983616,
+  "source_sha256": "9d4cb0afd25f5ff1aa91603774c2f3918cbb7ea28cf98dce0831eb0e2d1ac2c0",
+  "onnx_sha256": "ed872a935d07fcb68a6c0933dc18c2c54d257c5f19c030f26e7bdb4a0e83975b",
+  "bytes": 46301746,
+  "layers": 6,
+  "kv_heads": 3,
+  "head_dim": 64,
+  "context": 8192,
+  "response_cap": 512,
+  "eos": 2,
+  "label": "WebShop \u00b7 PPO-RA \u00b7 720.9K steps",
+  "hf_repo": "eteron/ZeroHero-WebShop-10M-PPO-RA",
+  "env_steps": 720896,
+  "method": "PPO-RA",
+  "validation": {
+    "max_logit_error": 3.0279159545898438e-05,
+    "greedy_tokens_checked": 12
+  },
+  "instructions": "You are shopping in a simulated store. Complete the user's shopping instruction.\nUse only information visible on the current page and in recent history.\nYou may search with search[keywords] or click with click[exact visible button, product ID, or option].\nChoose required options before clicking Buy Now. You can return with click[Back to Search].\nExplain your next decision briefly, then end with ACTION: followed by exactly one search[...] or click[...] action."
+}

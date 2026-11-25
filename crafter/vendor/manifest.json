@@ -1,0 +1,36 @@
+{
+  "pyodide": "0.27.7",
+  "python": "3.12.7",
+  "onnxruntime": "1.22.0",
+  "inter": "5.3.0",
+  "packages": [
+    {
+      "name": "numpy",
+      "version": "2.0.2",
+      "file": "numpy-2.0.2-cp312-cp312-pyodide_2024_0_wasm32.whl",
+      "sha256": "ebb61241d962b98b21597d7ce43b67668a6d5bab3acec4fbe958657320d7cd08",
+      "source": "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/numpy-2.0.2-cp312-cp312-pyodide_2024_0_wasm32.whl"
+    },
+    {
+      "name": "pillow",
+      "version": "10.2.0",
+      "file": "pillow-10.2.0-cp312-cp312-pyodide_2024_0_wasm32.whl",
+      "sha256": "43eab147a9355385a99eeac18fb577d4af2fe4bd0bbd23d3ba3ddb92e72c2815",
+      "source": "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pillow-10.2.0-cp312-cp312-pyodide_2024_0_wasm32.whl"
+    },
+    {
+      "name": "scipy",
+      "version": "1.14.1",
+      "file": "scipy-1.14.1-cp312-cp312-pyodide_2024_0_wasm32.whl",
+      "sha256": "997c50a61564a8ce6a56ea98a42e7f4427e5eb98475a73233e83df6a184f415c",
+      "source": "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/scipy-1.14.1-cp312-cp312-pyodide_2024_0_wasm32.whl"
+    },
+    {
+      "name": "openblas",
+      "version": "0.3.26",
+      "file": "openblas-0.3.26.zip",
+      "sha256": "787ea9a8a5cd160204388d03324b3b7ce5c9aea14b5680cec987f837e76c5198",
+      "source": "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/openblas-0.3.26.zip"
+    }
+  ]
+}

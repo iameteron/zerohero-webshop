@@ -22,8 +22,9 @@
     <nav aria-label="Episode controls">
       <select id="mode" aria-label="Control mode"><option value="agent">Agent</option><option value="manual">Manual</option></select>
       <select id="model" aria-label="Model" title="Model · switching restarts this task">
-        <option value="model" data-description="TCOD SFT, epoch 4 · GiGPO-7B teacher">TCOD SFT · epoch 4</option>
-        <option value="model-ppo100" data-description="PPO, cycle 100 · initialized from TCOD SFT epoch 4">PPO · cycle 100</option>
+        <option value="model" data-description="SFT · epoch 4 · 10M parameters · TCOD demonstrations from GiGPO-7B">SFT · epoch 4</option>
+        <option value="model-ppo100" data-description="PPO · cycle 100 · 10M parameters · initialized from SFT epoch 4">PPO · cycle 100</option>
+        <option value="model-ppo-ra" selected data-description="PPO-RA · 720,896 environment steps · 10M parameters" data-weights="https://huggingface.co/eteron/ZeroHero-WebShop-10M-PPO-RA">PPO-RA · 720.9K steps</option>
       </select>
       <button id="run" title="Run agent" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2v12l10-6z"/></svg>Run</button>
       <button id="step" aria-label="Step" title="One agent step" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2v12l9-6zM12 2h2v12h-2z"/></svg></button>
@@ -57,6 +58,6 @@
   <input id="task-filter" type="search" placeholder="Search by instruction or task number" aria-label="Filter tasks" autofocus>
   <div id="task-list"></div>
 </dialog>
-<script type="module" src="app.js?v=5"></script>
+<script type="module" src="app.js?v=6"></script>
 </body>
 </html>

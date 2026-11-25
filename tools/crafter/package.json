@@ -1,0 +1,25 @@
+{
+  "name": "zero-wasm",
+  "description": "Crafter and a 12.6M screen-and-memory agent running locally in browser WebAssembly",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node serve.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.3.0",
+    "@huggingface/tokenizers": "0.2.0",
+    "onnxruntime-web": "1.22.0",
+    "pyodide": "0.27.7"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "linkedom": "0.18.12"
+  }
+}
