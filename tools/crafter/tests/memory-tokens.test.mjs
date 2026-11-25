@@ -6,7 +6,7 @@ import { memoryPrompt, readAnswer, tokenTable } from '../src/memory-tokens.js';
 // Expected values from the training code (ZeroHero scripts/make_wasm_memory_fixture.py: MemoryTokens.parse and
 // MemoryTokens.prompts on the same tokenizer).
 const fixture = JSON.parse(await readFile(new URL('./fixtures/memory-tokens.json', import.meta.url), 'utf8'));
-const tokenizer = JSON.parse(await readFile(new URL('../assets/models/vision-memory/tokenizer.json', import.meta.url), 'utf8'));
+const tokenizer = JSON.parse(await readFile(new URL('../../../crafter/assets/models/vision-memory/tokenizer.json', import.meta.url), 'utf8'));
 const table = tokenTable(tokenizer);
 
 test('answers are read as in training: action, memory tokens, invalid answers', () => {

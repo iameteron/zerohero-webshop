@@ -170,3 +170,6 @@ summary::-webkit-details-marker { display: none; }
 }
 
 #model { max-width: 100%; min-width: 210px; padding: 7px; font: inherit; border: 1px solid #dfe2da; border-radius: 6px; background: #fff; }
+
+.bar { flex-wrap: wrap; }
+#model { order: -1; flex-basis: 100%; width: 100%; }

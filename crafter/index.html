@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fafaf9">
-  <title>ZeroHero vision 12.6M with memory in Crafter</title>
-  <meta name="description" content="A 12.6M-parameter vision Crafter agent that plays from the game screen and keeps its own memory. The game and the model run locally in your browser using WebAssembly.">
+  <title>ZeroHero · Crafter</title>
+  <meta name="description" content="Text and visual ZeroHero agents playing Crafter. Compare PPO and PPO-RA checkpoints locally in your browser using WebAssembly.">
   <link rel="preload" href="./vendor/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <main aria-label="Crafter">
     <header class="top">
-      <h1>ZeroHero vision 12.6M with memory in Crafter</h1>
+      <h1>ZeroHero · Crafter</h1>
       <span class="seed" title="Current world seed">World seed <b id="world-seed">0</b></span>
     </header>
 
@@ -71,7 +71,7 @@
 
     <aside class="reasoning" aria-label="Model reasoning">
       <div id="token-stats" class="token-stats" hidden></div>
-      <div class="response-wrap"><pre id="response">The game and the vision model load together. Press Run to start the agent, or Step for one decision.
+      <div class="response-wrap"><pre id="response">The game and the selected model load together. Press Run to start the agent, or Step for one decision.
 
 Choose a checkpoint below the game. Visual agents use the screen and their own memory; the text agent uses text observations and recent actions. Switching models starts a fresh world. Everything runs locally in this browser tab using WebAssembly.</pre><div id="thinking" class="thinking" hidden><i></i><span>Reading the screen…</span></div></div>
       <footer id="action-footer" class="action-footer" hidden><span>Action: <strong id="last-action">none</strong></span><small id="action-note"></small></footer>
